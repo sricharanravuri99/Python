@@ -1,0 +1,22 @@
+import boto3
+
+def create_ec2_instance(ami_id, instance_type, key_name):
+    ec2 = boto3.resource('ec2')
+
+    instances = ec2.create_instances(
+        ImageId=ami_id,
+        InstanceType=instance_type,
+        KeyName=key_name,
+        MinCount=1,
+        MaxCount=1
+    )
+
+    instance = instances[0]
+    print(f"New instance created: {instance.id}")
+
+# Replace with your AMI ID, instance type, and key pair name
+ami_id = "ami-123"
+instance_type = "t2.micro"
+key_name = "key-pair"
+
+create_ec2_instance(ami_id, instance_type, key_name)
