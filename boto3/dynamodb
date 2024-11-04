@@ -1,0 +1,30 @@
+import boto3
+
+def create_dynamodb_table(table_name, partition_key):
+    dynamodb = boto3.resource('dynamodb')
+    table = dynamodb.create_table(
+        TableName=table_name,
+        KeySchema=[
+            {
+                'AttributeName': partition_key,
+                'KeyType': 'HASH'
+            }
+        ],
+        AttributeDefinitions=[
+            {
+                'AttributeName': partition_key,
+                'AttributeType': 'S'
+            }
+        ],
+        ProvisionedThroughput={
+            'ReadCapacityUnits': 5,
+            'WriteCapacityUnits': 5
+        }
+    )
+    table.wait_until_exists()
+    print(f"Table {table_name} created successfully!")
+
+table_name = 'my_table'
+partition_key = 'id'
+
+create_dynamodb_table(table_name, partition_key)
